@@ -34,8 +34,13 @@ func GenerateHostToken() string {
 	return uuid.New().String()
 }
 
-func GetHosts() []*Host {
+func (host *Host) Delete() u.ReturnMessage {
+	GetDB().Delete(&host)
 
+	return u.Message(true, "host deleted")
+}
+
+func GetHosts() []*Host {
 	hosts := make([]*Host, 0)
 	err := GetDB().Table("hosts").Find(&hosts).Error
 	if err != nil {
@@ -66,4 +71,11 @@ func (h *Host) CountSecurityUpdates() uint {
 	var count uint
 	GetDB().Model(&Update{}).Where("host_id = ? AND security = true", h.ID).Count(&count)
 	return count
+}
+
+func GetHost(id uint) *Host {
+	host := &Host{}
+	db.First(&host, id)
+
+	return host
 }

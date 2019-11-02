@@ -41,10 +41,11 @@ func main() {
 	// Host routes
 	router.HandleFunc("/api/hosts", controllers.CreateHost).Methods("POST")
 	router.HandleFunc("/api/hosts", controllers.ListHosts).Methods("GET")
+	router.HandleFunc("/api/hosts/{id:[0-9]+}", controllers.ListHosts).Methods("DELETE")
 
 	// Update routes
-	router.HandleFunc("/api/updates",             controllers.CreateUpdate).Methods("POST")
-	router.HandleFunc("/api/updates",             controllers.ListUpdates).Methods("GET")
+	router.HandleFunc("/api/updates", controllers.CreateUpdate).Methods("POST")
+	router.HandleFunc("/api/updates", controllers.ListUpdates).Methods("GET")
 	router.HandleFunc("/api/updates/{id:[0-9]+}", controllers.DeleteUpdate).Methods("DELETE")
 
 	// Account routes
