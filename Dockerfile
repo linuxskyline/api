@@ -15,4 +15,5 @@ FROM alpine:latest
 
 COPY --from=build /go/bin/api /api
 
+EXPOSE 80
 ENTRYPOINT ["/api"]
