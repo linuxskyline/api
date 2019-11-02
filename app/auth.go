@@ -16,7 +16,6 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-
 		notAuth := []string{"/api/user", "/api/user/login"} //List of endpoints that doesn't require auth
 		requestPath := r.URL.Path                           //current request path
 
@@ -28,7 +27,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 			}
 		}
 
-		if requestPath == "/api/updates" {
+		if strings.HasPrefix(requestPath, "/api/updates") {
 			fmt.Print("call to updates")
 			if r.Header.Get("HostToken") != "" {
 				fmt.Print("host token given")

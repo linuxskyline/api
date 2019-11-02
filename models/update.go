@@ -3,18 +3,20 @@ package models
 import (
 	u "apt-api/utils"
 	"fmt"
+	"time"
 
-	"github.com/jinzhu/gorm"
 )
 
 //a struct to rep user account
 type Update struct {
-	gorm.Model
-	HostId         uint   `json:"host_id" gorm:"unique_index:host_package_name"`
-	PackageName    string `json:"packageName" gorm:"unique_index:host_package_name"`
-	CurrentVersion string `json:"currentVersion"`
-	NewVersion     string `json:"newVersion"`
-	Security       bool   `json:"security"`
+	ID                  int       `gorm:"primary_key" sql:"AUTO_INCREMENT" json:"id" jsonapi:"primary,updates"`
+	CreatedAt           time.Time `sql:"DEFAULT:current_timestamp" json:"created_at" jsonapi:"attr,created_at"`
+	UpdatedAt           time.Time `json:"updated_at" jsonapi:"attr,updated_at"`
+	HostId         uint   `json:"host_id" gorm:"unique_index:host_package_name" jsonapi:"attr,hostId"`
+	PackageName    string `json:"packageName" gorm:"unique_index:host_package_name" jsonapi:"attr,packageName"`
+	CurrentVersion string `json:"currentVersion" jsonapi:"attr,currentVersion"`
+	NewVersion     string `json:"newVersion" jsonapi:"attr,newVersion"`
+	Security       bool   `json:"security" jsonapi:"attr,security"`
 }
 
 func (update *Update) Create() u.ReturnMessage {
@@ -45,6 +47,12 @@ func (update *Update) Create() u.ReturnMessage {
 	return response
 }
 
+func (update *Update) Delete() u.ReturnMessage {
+	GetDB().Delete(&update)
+
+	return u.Message(true, "Update deleted")
+}
+
 func GetUpdates(host uint) []*Update {
 
 	updates := make([]*Update, 0)
@@ -55,4 +63,11 @@ func GetUpdates(host uint) []*Update {
 	}
 
 	return updates
+}
+
+func GetUpdate(id uint) *Update {
+	update := &Update{}
+	db.First(&update, id)
+
+	return update
 }
