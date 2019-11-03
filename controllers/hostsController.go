@@ -25,6 +25,28 @@ var CreateHost = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
+var GetHost = func(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	resp := u.Message(true, "success")
+
+	hostID, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		log.WithFields(log.Fields{
+			"source":     r.RemoteAddr,
+			"uri":        r.RequestURI,
+			"useragent":  r.UserAgent(),
+			"providedid": vars["id"],
+			"cause":      err,
+		}).Error("Failed decode update id from url")
+		u.Respond(w, u.Message(false, fmt.Sprintf("There was an error in your request")))
+	}
+
+	host := models.GetHost(uint(hostID))
+
+	resp["data"] = host
+	u.Respond(w, resp)
+}
+
 var ListHosts = func(w http.ResponseWriter, r *http.Request) {
 	data := models.GetHosts()
 	resp := u.Message(true, "success")

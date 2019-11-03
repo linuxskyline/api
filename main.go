@@ -52,7 +52,8 @@ func main() {
 	router.HandleFunc("/api/user", controllers.CreateAccount).Methods("POST")
 	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 
-	// Where ORIGIN_ALLOWED is like `scheme://dns[:port]`, or `*` (insecure)
+	// Because we use JWT and not cookies, cors doesn't add any security.
+	//  Especially since this is designed to be a public API.
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Authorization", "content-type"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
