@@ -42,6 +42,7 @@ func main() {
 	router.HandleFunc("/api/hosts", controllers.CreateHost).Methods("POST")
 	router.HandleFunc("/api/hosts", controllers.ListHosts).Methods("GET")
 	router.HandleFunc("/api/hosts/{id:[0-9]+}", controllers.DeleteHost).Methods("DELETE")
+	router.HandleFunc("/api/hosts/{id:[0-9]+}", controllers.GetHost).Methods("GET")
 
 	// Update routes
 	router.HandleFunc("/api/updates", controllers.CreateUpdate).Methods("POST")
